@@ -41,9 +41,12 @@ def get_similar_books(query_text, exclude_title):
     return filtered_results[:5]
 
 def expand_summary(summary):
+    # Instructional prompt to generate text in English
+    prompt = f"Translate and expand the following summary into a detailed English summary of about 150-300 words:\n\n{summary}"
+
     expanded = client.chat.completions.create(
         model="gpt-3.5-turbo",
-        messages=[{"role": "user", "content": summary}]
+        messages=[{"role": "user", "content": prompt}]
     )
     return expanded.choices[0].message.content.strip()
 
@@ -76,6 +79,8 @@ def main():
         cache_recommended_book_summaries(recommended_books)
         # Expand summary only when a new book is queried
         st.session_state.expanded_summary = expand_summary(st.session_state.book_metadata['Summary'])
+        # Clear previous chat messages for the new book query
+        st.session_state.messages = [{"role": "assistant", "content": "Hello, I'm BookBot! You can ask me anything about books and more!"}]
 
     st.title("BookBot: Book Information and Recommendation Chatbot")
     tabs = st.tabs(["Recommended Books", "Chat"])
@@ -113,7 +118,8 @@ def main():
 
     with tabs[1]:
         if "messages" not in st.session_state:
-            st.session_state.messages = []
+            if "messages" not in st.session_state:
+                st.session_state.messages = [{"role": "assistant", "content": "Hello, I'm BookBot! You can ask me anything about books and more!"}]
 
         for message in st.session_state.messages:
             with st.chat_message(message["role"]):
