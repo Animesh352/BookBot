@@ -38,7 +38,7 @@ def get_similar_books(query_text, exclude_title):
     query_embedding = text_to_embedding(query_text)
     results = index.query(vector=query_embedding, top_k=10, include_metadata=True)
     filtered_results = [book for book in results['matches'] if book['metadata']['book_title'] != exclude_title]
-    return filtered_results[:5]
+    return filtered_results[:10]
 
 def expand_summary(summary):
     # Instructional prompt to generate text in English
@@ -87,7 +87,7 @@ def main():
 
     if st.session_state.get('book_metadata'):
         book_metadata = st.session_state.book_metadata
-        st.sidebar.image(book_metadata['img_l'] if book_metadata['img_l'] else "default_image.jpg", use_column_width=True)
+        st.sidebar.image(book_metadata['img_l'] if book_metadata['img_l'] else "default_image.jpg", caption=book_metadata['book_title'], use_column_width=True)
         st.sidebar.write("Title: " + book_metadata['book_title'])
         st.sidebar.write("Author: " + book_metadata['book_author'])
         if book_metadata['year_of_publication']:
