@@ -64,7 +64,7 @@ networkx==3.3
 notebook @ file:///private/var/folders/sy/f16zz6x50xz3113nwtb9bvq00000gp/T/abs_fal5vav6rv/croot/notebook_1708029873897/work
 notebook_shim @ file:///private/var/folders/c_/qfmhj66j0tn016nkx_th4hxm0000gp/T/abs_3ad004vb8r/croot/notebook-shim_1699455899066/work
 numpy==1.26.4
-openai==1.17.0
+openai==0.10.2
 overrides @ file:///private/var/folders/sy/f16zz6x50xz3113nwtb9bvq00000gp/T/abs_a4tzft66ma/croot/overrides_1699371143883/work
 packaging @ file:///private/var/folders/sy/f16zz6x50xz3113nwtb9bvq00000gp/T/abs_2bd6vdlyjt/croot/packaging_1710810554459/work
 pandas==2.2.1
