@@ -1,74 +1,81 @@
-# BookBot 📚🤖
-BookBot is an innovative AI-driven application that enhances user interaction with books by providing detailed insights, summaries, and responses based on text analysis. It leverages advanced AI models from OpenAI, including GPT-3.5 Turbo for conversational responses and Pinecone for retrieving book information and recommendations.
+# BookBot
 
-## How It Works
+A Streamlit book recommendation and Q&A chatbot. Search for a book by title or description, get similar recommendations retrieved from a Pinecone vector index, and chat with the bot about any book using GPT-3.5-turbo.
 
-- **Book Metadata Retrieval**: BookBot retrieves detailed information about books, including titles, authors, publication years, and summaries, using a custom book metadata API based on Pinecone vector database.
-- **AI-Driven Interaction**: Users can interact with the bot by asking questions about specific books. BookBot uses GPT-3.5-turbo to understand the context of the questions and generate accurate and relevant answers.
+## How it works
 
-## Built With
+1. Search query is embedded with `sentence-transformers/all-MiniLM-L6-v2` (runs locally via the `transformers` library).
+2. The embedding is sent to a Pinecone index that stores metadata for a large book catalogue (title, author, year, publisher, language, category, summary).
+3. Top-1 nearest neighbor returns the matched book's metadata; top-10 returns similar books.
+4. Summaries that are short or non-English are expanded into 150-300 word English paragraphs via GPT-3.5-turbo.
+5. A persistent chat session backed by GPT-3.5-turbo lets you ask questions about any book.
 
-- **Streamlit** - For creating and sharing beautiful data apps quickly.
-- **OpenAI GPT-3.5 Turbo** - For generating responses to user queries.
-- **Pinecone** - Used to store books data in vector form and retrieve book information and recommendations based on vector score.
+## Built with
 
-## Getting Started
+- **Streamlit** -- UI and session state management
+- **Pinecone** -- vector index for book metadata and similarity search
+- **OpenAI GPT-3.5-turbo** -- summary expansion and conversational Q&A
+- **sentence-transformers/all-MiniLM-L6-v2** -- local text embedding model (via HuggingFace `transformers`)
+
+## UI
+
+Two tabs:
+
+| Tab | What it shows |
+|-----|---------------|
+| Recommended Books | Top-10 most similar books to the search query, each with cover image, metadata, and an expanded English summary |
+| Chat | Persistent multi-turn chat with BookBot; context resets when a new book is searched |
+
+The sidebar displays the matched book's cover image, title, author, year, publisher, language, category, and an expanded summary.
+
+## Setup
 
 ### Prerequisites
 
-- Python 3.8 or newer.
-- An OpenAI API key.
-- A Pinecone API key.
-- Streamlit installed.
+- Python 3.8+
+- OpenAI API key
+- Pinecone API key (with a pre-populated index -- see Data below)
 
-### Installation
-
-Clone the repository:
+### Install
 
 ```bash
 git clone https://github.com/Animesh352/BookBot.git
-```
-
-Install required packages:
-
-```bash
+cd BookBot
 pip install -r requirements.txt
 ```
 
-### Setting Up Environment Variables
+### Set environment variables
 
-Before running the application, you need to set up necessary environment variables. Specifically, you need to set your OpenAI API key to enable AI functionalities. Here’s how you can set it up based on your operating system:
+macOS / Linux:
 
-For Windows
-```bash
-set OPENAI_API_KEY=your_openai_api_key_here
-set PINECONE_API_KEY=your_pinecone_api_key_here
-```
-
-For macOS and Linux
 ```bash
 export OPENAI_API_KEY=your_openai_api_key_here
 export PINECONE_API_KEY=your_pinecone_api_key_here
 ```
 
-Make sure to replace your_openai_api_key_here with your actual OpenAI API key.
+Windows:
 
+```bash
+set OPENAI_API_KEY=your_openai_api_key_here
+set PINECONE_API_KEY=your_pinecone_api_key_here
+```
 
-### Run the Streamlit application:
+### Run
 
 ```bash
 streamlit run app.py
 ```
 
-## Usage
-Interact through the UI: Use the sidebar to search for books and view detailed metadata. Navigate to the interaction section to chat with BookBot about the book details.
-Ask Questions or Get Summaries: You can ask specific questions about any book's content or get a summary of other books or authors.
+## Data
 
+Book metadata is stored in chunked CSV files under `Data/` (`df_chunk_1.csv` through `df_chunk_14.csv`). Each row contains at minimum: `book_title`, `book_author`, `year_of_publication`, `publisher`, `Language`, `Category`, `Summary`, `img_l` (cover image URL).
+
+You need to load this data into a Pinecone index with embeddings generated from `utils.py`'s `text_to_embedding()` before the app can run. The embedding model is `sentence-transformers/all-MiniLM-L6-v2`.
+
+## Language support
+
+The app recognizes and displays language names for 30+ languages including Arabic, Chinese (Simplified/Traditional), French, German, Hindi, Japanese, Korean, Russian, Spanish, and more.
 
 ## Author
-[Animesh Giri] - Initial work - Animesh352
 
-## Acknowledgments
-Thanks to OpenAI for providing the GPT and Pinecone for providing the vector database which power the core functionalities of this application.
-Thanks to the Python and Streamlit communities for support and tools that make this app possible.
-
+Animesh Giri -- [Animesh352](https://github.com/Animesh352)
