@@ -32,7 +32,7 @@ The sidebar displays the matched book's cover image, title, author, year, publis
 
 ### Prerequisites
 
-- Python 3.8+
+- Python 3.11+
 - OpenAI API key
 - Pinecone API key (with a pre-populated index -- see Data below)
 
